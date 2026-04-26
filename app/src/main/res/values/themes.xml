@@ -1,0 +1,32 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme -->
+    <style name="Base.Theme.ElearningApplication" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Primary brand color - Updated to Light Blue for Light Mode -->
+        <item name="colorPrimary">#4A90E2</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+
+        <!-- Background and Surface colors - FORCED LIGHT -->
+        <item name="android:windowBackground">#FFFFFF</item>
+        <item name="colorSurface">#FFFFFF</item>
+        <item name="colorOnSurface">#121212</item>
+        <item name="colorSurfaceVariant">#F5F5F5</item>
+        <item name="colorOnSurfaceVariant">#424242</item>
+
+        <item name="colorOutline">#737373</item>
+        <item name="colorError">#B00020</item>
+    </style>
+
+    <style name="Theme.ElearningApplication" parent="Base.Theme.ElearningApplication" />
+
+    <style name="CardStyle" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">2dp</item>
+        <item name="cardBackgroundColor">?attr/colorSurfaceVariant</item>
+    </style>
+
+    <style name="PrimaryButtonStyle" parent="Widget.Material3.Button">
+        <item name="cornerRadius">8dp</item>
+        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+</resources>
