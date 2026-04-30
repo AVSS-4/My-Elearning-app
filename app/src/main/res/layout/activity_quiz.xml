@@ -211,7 +211,7 @@
             android:padding="5dp"
             android:layout_alignParentEnd="true"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
-            android:tint="@color/on_surface_variant"
+            app:tint="@color/on_surface_variant"
             android:clickable="true"
             android:scaleType="fitCenter"
             android:focusable="true"
