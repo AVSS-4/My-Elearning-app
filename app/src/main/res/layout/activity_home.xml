@@ -18,6 +18,7 @@
             android:orientation="vertical"
             android:padding="24dp">
 
+            <!-- HEADER -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,6 +49,7 @@
                     app:tint="?attr/colorOutline" />
             </LinearLayout>
 
+            <!-- TITLE -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -66,6 +68,7 @@
                 android:textColor="?attr/colorOnSurface"
                 android:layout_marginBottom="16dp"/>
 
+            <!-- SEARCH -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/searchBarLayout"
                 android:layout_width="match_parent"
@@ -74,26 +77,42 @@
                 app:boxBackgroundColor="?attr/colorSurfaceVariant"
                 app:boxStrokeColor="?attr/colorPrimary"
                 app:endIconMode="custom"
-                app:endIconDrawable="@android:drawable/ic_menu_search"
-                app:boxCornerRadiusTopStart="8dp"
-                app:boxCornerRadiusTopEnd="8dp">
+                app:endIconDrawable="@android:drawable/ic_menu_search">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSearch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Search subjects..."
-                    android:textColor="?attr/colorOnSurface"
-                    android:textColorHint="?attr/colorOutline"/>
+                    android:hint="Search subjects..."/>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- ✅ UPLOAD BUTTON -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnUpload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Upload Questions File"
+                android:layout_marginBottom="12dp"
+                android:textColor="?attr/colorOnPrimary"
+                app:backgroundTint="?attr/colorPrimary"/>
+
+            <!-- ✅ FILE CONTENT DISPLAY -->
+            <TextView
+                android:id="@+id/tvFileContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="File content will appear here"
+                android:textSize="16sp"
+                android:padding="12dp"
+                android:background="?attr/colorSurfaceVariant"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- COMPUTER SCIENCE -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardComputerScience"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="?attr/colorSurfaceVariant"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -101,123 +120,62 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="24dp">
-
-                    <TextView
-                        android:id="@+id/tvTag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="CORE CURRICULUM"
-                        android:paddingHorizontal="8dp"
-                        android:paddingVertical="4dp"
-                        android:textSize="10sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:background="@drawable/rounded_tag_background"
-                        android:layout_marginBottom="16dp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Computer Science"
                         android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorOnSurface"
-                        android:layout_marginBottom="8dp"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Master the architecture of digital systems through algorithms and systemic logic."
-                        android:textColor="?attr/colorOutline"
-                        android:layout_marginBottom="16dp"/>
+                        android:textStyle="bold"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnCSQuiz"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Start Quiz"
-                        app:icon="@android:drawable/ic_media_play"
-                        android:textColor="?attr/colorOnPrimary"
-                        app:iconTint="?attr/colorOnPrimary"
-                        app:backgroundTint="?attr/colorPrimary" />
+                        android:text="Start Quiz"/>
+
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnNavProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Go to Profile"
+                        android:layout_marginTop="16dp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardMathematics"
+            <!-- HISTORY BUTTON -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnHistory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="?attr/colorSurfaceVariant"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                android:layout_marginBottom="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="24dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Mathematics"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorOnSurface"
-                        android:layout_marginBottom="8dp"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Advanced calculus, linear algebra, and foundational proofs."
-                        android:textColor="?attr/colorOutline"
-                        android:layout_marginBottom="16dp"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Begin Assessment ->"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorPrimary"/>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                android:text="View Quiz History"
+                android:layout_marginTop="16dp"
+                android:textColor="?attr/colorOnPrimary"
+                app:backgroundTint="?attr/colorPrimary"/>
 
         </LinearLayout>
     </ScrollView>
 
+    <!-- BOTTOM NAV -->
     <LinearLayout
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
-        android:background="?attr/colorSurfaceVariant"
-        android:elevation="16dp"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnNavHome"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="HOME"
-            android:textColor="?attr/colorPrimary"
-            app:icon="@android:drawable/ic_menu_preferences"
-            app:iconGravity="textTop"
-            app:iconTint="?attr/colorPrimary" />
+            android:text="HOME"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnNavProfile"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="PROFILE"
-            android:textColor="?attr/colorOutline"
-            app:icon="@android:drawable/ic_menu_myplaces"
-            app:iconGravity="textTop"
-            app:iconTint="?attr/colorOutline" />
+            android:text="PROFILE"/>
     </LinearLayout>
 
 </RelativeLayout>

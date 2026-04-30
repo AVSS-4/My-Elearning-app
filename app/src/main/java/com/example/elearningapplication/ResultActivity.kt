@@ -11,6 +11,8 @@ import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class ResultActivity : AppCompatActivity() {
 
@@ -22,6 +24,18 @@ class ResultActivity : AppCompatActivity() {
         val score = intent.getIntExtra("FINAL_SCORE", 0)
         val totalQuestions = intent.getIntExtra("TOTAL_QUESTIONS", 10)
         val subject = intent.getStringExtra("SUBJECT_NAME") ?: "General"
+
+        val sharedPref = getSharedPreferences("quiz_history", MODE_PRIVATE)
+        val editor = sharedPref.edit()
+
+        val oldData = sharedPref.getString("history", "") ?: ""
+
+        val date = SimpleDateFormat("dd/MM/yyyy HH:mm").format(Date())
+
+        val newEntry = "📘 $subject: $score/$totalQuestions\n🕒 $date\n\n"
+
+        editor.putString("history", oldData + newEntry)
+        editor.apply()
 
         // 2. Calculations
         val incorrect = totalQuestions - score

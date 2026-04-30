@@ -34,6 +34,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -45,6 +46,7 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.play.services.auth)
     implementation(libs.firebase.crashlytics)
+    implementation("com.google.android.material:material:1.9.0")
     
     // Retrofit
     implementation(libs.retrofit)

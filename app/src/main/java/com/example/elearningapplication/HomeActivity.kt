@@ -13,22 +13,41 @@ import com.google.android.material.textfield.TextInputLayout
 
 class HomeActivity : AppCompatActivity() {
 
+    private val FILE_REQUEST_CODE = 100
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        // Find UI elements
-        val etSearch = findViewById<TextInputEditText>(R.id.etSearch)
-        val searchBarLayout = findViewById<TextInputLayout>(R.id.searchBarLayout)
-        val cardComputerScience = findViewById<MaterialCardView>(R.id.cardComputerScience)
-        val btnCSQuiz = findViewById<MaterialButton>(R.id.btnCSQuiz)
-        val btnNavProfile = findViewById<MaterialButton>(R.id.btnNavProfile)
+        // Find Views
+        val btnUpload = findViewById<MaterialButton?>(R.id.btnUpload)
+        val btnHistory = findViewById<MaterialButton?>(R.id.btnHistory)
+        val etSearch = findViewById<TextInputEditText?>(R.id.etSearch)
+        val searchBarLayout = findViewById<TextInputLayout?>(R.id.searchBarLayout)
+        val cardComputerScience = findViewById<MaterialCardView?>(R.id.cardComputerScience)
+        val btnCSQuiz = findViewById<MaterialButton?>(R.id.btnCSQuiz)
+        val btnNavProfile = findViewById<MaterialButton?>(R.id.btnNavProfile)
+
+        // ✅ Upload Button (FIXED)
+        btnUpload?.setOnClickListener {
+            Toast.makeText(this, "Upload Clicked", Toast.LENGTH_SHORT).show()
+
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.type = "text/plain"
+            startActivityForResult(intent, FILE_REQUEST_CODE)
+        }
+
+        // History Button
+        btnHistory?.setOnClickListener {
+            startActivity(Intent(this, QuizHistoryActivity::class.java))
+        }
 
         // Search Logic
-        etSearch.setOnEditorActionListener { _, actionId, event ->
+        etSearch?.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH ||
                 actionId == EditorInfo.IME_ACTION_DONE ||
-                (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)) {
+                (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
+            ) {
                 performSearch(etSearch.text.toString())
                 true
             } else {
@@ -36,17 +55,23 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        searchBarLayout.setEndIconOnClickListener {
-            performSearch(etSearch.text.toString())
+        searchBarLayout?.setEndIconOnClickListener {
+            performSearch(etSearch?.text.toString())
         }
 
         // Navigation
-        btnNavProfile.setOnClickListener {
+        btnNavProfile?.setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
         }
 
-        cardComputerScience.setOnClickListener { goToSetup("Computer Science") }
-        btnCSQuiz.setOnClickListener { goToSetup("Computer Science") }
+        // Quiz Navigation
+        cardComputerScience?.setOnClickListener {
+            goToSetup("Computer Science")
+        }
+
+        btnCSQuiz?.setOnClickListener {
+            goToSetup("Computer Science")
+        }
     }
 
     private fun performSearch(query: String) {
