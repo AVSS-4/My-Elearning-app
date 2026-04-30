@@ -13,3 +13,4 @@
 .externalNativeBuild
 .cxx
 local.properties
+/gradle-9.1.0-bin.zip
