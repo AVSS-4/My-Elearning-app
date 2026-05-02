@@ -3,287 +3,137 @@ package com.example.elearningapplication
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.text.Html
-import android.util.Log
-import android.view.View
-import android.widget.ImageButton
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.button.MaterialButton
-import com.google.firebase.database.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class QuizActivity : AppCompatActivity() {
 
-    private var currentQuestionIndex = 0
+    private lateinit var questions: ArrayList<Question>
+    private var currentIndex = 0
     private var score = 0
-    private var selectedOptionIndex: Int? = null
-    private var correctAnswerText: String = ""
 
-    private var activeQuestions: MutableList<QuestionModel> = mutableListOf()
-    private var currentOptions: List<String> = listOf()
-    private var countDownTimer: CountDownTimer? = null
-
+    private lateinit var tvQuestion: TextView
+    private lateinit var radioGroup: RadioGroup
+    private lateinit var optionA: RadioButton
+    private lateinit var optionB: RadioButton
+    private lateinit var optionC: RadioButton
+    private lateinit var optionD: RadioButton
+    private lateinit var btnNext: Button
     private lateinit var tvTimer: TextView
-    private lateinit var tvQuestionTracker: TextView
-    private lateinit var tvQuestionText: TextView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var loadingProgress: ProgressBar
-    private lateinit var btnOptions: List<MaterialButton>
 
-    private lateinit var databaseReference: DatabaseReference
+    private var countDownTimer: CountDownTimer? = null
+    private var timeLeftInMillis: Long = 60000 // 60 sec
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
 
-        tvTimer = findViewById(R.id.tvTimer)
-        tvQuestionTracker = findViewById(R.id.tvQuestionTracker)
-        tvQuestionText = findViewById(R.id.tvQuestionText)
-        progressBar = findViewById(R.id.progressBar)
-        loadingProgress = findViewById(R.id.progressBarLoading)
+        // ✅ SAFE DATA FETCH (VERY IMPORTANT FIX)
+        val receivedQuestions = intent.getSerializableExtra("questions")
 
-        val btnClose = findViewById<ImageButton>(R.id.btnClose)
-        val btnNext = findViewById<MaterialButton>(R.id.btnNext)
-
-        btnOptions = listOf(
-            findViewById(R.id.btnOption0),
-            findViewById(R.id.btnOption1),
-            findViewById(R.id.btnOption2),
-            findViewById(R.id.btnOption3)
-        )
-
-        val subjectName = intent.getStringExtra("SUBJECT_NAME") ?: "General"
-        Log.d("QuizActivity", "Subject received: $subjectName")
-
-        if (subjectName.lowercase().trim() == "kotlin") {
-            fetchFirebaseQuestions()
+        if (receivedQuestions != null && receivedQuestions is ArrayList<*>) {
+            questions = receivedQuestions as ArrayList<Question>
         } else {
-            fetchLiveQuestions(subjectName)
+            questions = ArrayList()
+            Toast.makeText(this, "Error: No questions received!", Toast.LENGTH_SHORT).show()
+            finish()
+            return
         }
 
-        btnOptions.forEachIndexed { index, button ->
-            button.setOnClickListener { selectOption(index) }
+        tvQuestion = findViewById(R.id.tvQuestion)
+        radioGroup = findViewById(R.id.radioGroup)
+        optionA = findViewById(R.id.optionA)
+        optionB = findViewById(R.id.optionB)
+        optionC = findViewById(R.id.optionC)
+        optionD = findViewById(R.id.optionD)
+        btnNext = findViewById(R.id.btnNext)
+        tvTimer = findViewById(R.id.tvTimer)
+
+        loadQuestion()
+
+        btnNext.setOnClickListener {
+            checkAnswer()
         }
-
-        btnNext.setOnClickListener { handleNextButtonClick() }
-        
-        btnClose.setOnClickListener { 
-            showExitConfirmation(subjectName) 
-        }
-    }
-
-    private fun showExitConfirmation(subject: String) {
-        AlertDialog.Builder(this)
-            .setTitle("Exit Quiz?")
-            .setMessage("Are you sure you want to stop? You will be returned to the assessment start page.")
-            .setPositiveButton("Yes, Exit") { _, _ ->
-                val intent = Intent(this, QuizSetupActivity::class.java)
-                intent.putExtra("SUBJECT_NAME", subject)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                startActivity(intent)
-                finish()
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
-    }
-
-    private fun fetchFirebaseQuestions() {
-        loadingProgress.visibility = View.VISIBLE
-        tvQuestionText.text = "Loading questions..."
-
-        val databaseUrl = "https://elearningapplication-e1ba188c-default-rtdb.asia-southeast1.firebasedatabase.app/"
-        
-        try {
-            databaseReference = FirebaseDatabase.getInstance(databaseUrl).getReference("quizzes/kotlin")
-
-            databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    loadingProgress.visibility = View.GONE
-                    if (snapshot.exists()) {
-                        activeQuestions.clear()
-                        for (data in snapshot.children) {
-                            val q = data.getValue(QuestionModel::class.java)
-                            q?.let { activeQuestions.add(it) }
-                        }
-
-                        if (activeQuestions.isNotEmpty()) {
-                            activeQuestions.shuffle()
-                            // UPDATED: Restored to 25 questions
-                            activeQuestions = activeQuestions.take(25).toMutableList()
-
-                            progressBar.max = activeQuestions.size
-                            // UPDATED: Timer set to 25 minutes
-                            startTimer(25 * 60 * 1000)
-                            loadQuestion()
-                        } else {
-                            tvQuestionText.text = "Error: Found 'quizzes/kotlin' but it's empty."
-                        }
-                    } else {
-                        tvQuestionText.text = "No questions found for this subject."
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    loadingProgress.visibility = View.GONE
-                    tvQuestionText.text = "Firebase Error: ${error.message}"
-                }
-            })
-        } catch (e: Exception) {
-            loadingProgress.visibility = View.GONE
-            tvQuestionText.text = "Error: ${e.message}"
-        }
-    }
-
-    private fun fetchLiveQuestions(subject: String) {
-        loadingProgress.visibility = View.VISIBLE
-        tvQuestionText.text = "Fetching questions for $subject..."
-
-        val categoryId = getCategoryId(subject)
-
-        RetrofitClient.instance.getQuestions(categoryId).enqueue(object : Callback<QuizResponse> {
-            override fun onResponse(call: Call<QuizResponse>, response: Response<QuizResponse>) {
-                loadingProgress.visibility = View.GONE
-                if (response.isSuccessful) {
-                    val rawList = response.body()?.results ?: emptyList()
-                    if (rawList.isNotEmpty()) {
-                        activeQuestions = rawList.map { api ->
-                            QuestionModel(
-                                question = api.question,
-                                options = (api.incorrect_answers + api.correct_answer).shuffled(),
-                                answer = api.correct_answer
-                            )
-                        }.shuffled().toMutableList()
-
-                        progressBar.max = activeQuestions.size
-                        // UPDATED: Timer set to 25 minutes
-                        startTimer(25 * 60 * 1000)
-                        loadQuestion()
-                    }
-                }
-            }
-            override fun onFailure(call: Call<QuizResponse>, t: Throwable) {
-                loadingProgress.visibility = View.GONE
-                Toast.makeText(this@QuizActivity, "Connection Error", Toast.LENGTH_SHORT).show()
-            }
-        })
     }
 
     private fun loadQuestion() {
-        if (activeQuestions.isEmpty() || currentQuestionIndex >= activeQuestions.size) return
+        if (currentIndex < questions.size) {
 
-        val q = activeQuestions[currentQuestionIndex]
-        tvQuestionText.text = decodeHtml(q.question)
-        tvQuestionTracker.text = "Question ${currentQuestionIndex + 1} of ${activeQuestions.size}"
-        progressBar.progress = currentQuestionIndex
+            val q = questions[currentIndex]
 
-        correctAnswerText = q.answer
-        currentOptions = q.options.shuffled()
+            tvQuestion.text = q.question
+            optionA.text = "A. ${q.optionA}"
+            optionB.text = "B. ${q.optionB}"
+            optionC.text = "C. ${q.optionC}"
+            optionD.text = "D. ${q.optionD}"
 
-        selectedOptionIndex = null
-        btnOptions.forEachIndexed { index, button ->
-            if (index < currentOptions.size) {
-                button.visibility = View.VISIBLE
-                button.text = decodeHtml(currentOptions[index])
-            } else {
-                button.visibility = View.GONE
-            }
-            resetButtonStyle(button)
+            radioGroup.clearCheck()
+
+            // 🔥 RESET TIMER
+            timeLeftInMillis = 60000
+            startTimer()
+
+        } else {
+            showResult()
         }
     }
 
-    private fun selectOption(selectedIndex: Int) {
-        selectedOptionIndex = selectedIndex
-        btnOptions.forEachIndexed { index, button ->
-            if (index == selectedIndex) {
-                button.setBackgroundColor(getColor(R.color.primary_fixed))
-                button.setTextColor(getColor(R.color.primary))
-                button.strokeWidth = 4
-            } else {
-                resetButtonStyle(button)
-            }
-        }
-    }
+    private fun startTimer() {
+        countDownTimer?.cancel()
 
-    private fun resetButtonStyle(button: MaterialButton) {
-        button.setBackgroundColor(getColor(R.color.surface_container_low))
-        button.setTextColor(getColor(R.color.outline))
-        button.strokeWidth = 0
-    }
-
-    private fun getCategoryId(subject: String): Int {
-        val s = subject.lowercase().trim()
-        return when {
-            s.contains("math") || s.contains("calculus") -> 19
-            s.contains("computer") || s.contains("it") || s.contains("coding") -> 18
-            s.contains("science") -> 17
-            s.contains("history") -> 23
-            s.contains("geography") -> 22
-            else -> 9
-        }
-    }
-
-    private fun startTimer(timeInMillis: Long) {
-        countDownTimer = object : CountDownTimer(timeInMillis, 1000) {
+        countDownTimer = object : CountDownTimer(timeLeftInMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                val minutes = (millisUntilFinished / 1000) / 60
-                val seconds = (millisUntilFinished / 1000) % 60
-                tvTimer.text = String.format("%02d:%02d", minutes, seconds)
+                tvTimer.text = "Time: ${millisUntilFinished / 1000}s"
             }
-            override fun onFinish() { finishQuiz() }
+
+            override fun onFinish() {
+                tvTimer.text = "Time: 0"
+                currentIndex++
+                loadQuestion()
+            }
         }.start()
     }
 
-    private fun handleNextButtonClick() {
-        if (activeQuestions.isEmpty()) {
-            Toast.makeText(this, "Questions not loaded yet", Toast.LENGTH_SHORT).show()
+    private fun checkAnswer() {
+        val selectedId = radioGroup.checkedRadioButtonId
+
+        if (selectedId == -1) {
+            Toast.makeText(this, "Select an answer", Toast.LENGTH_SHORT).show()
             return
         }
 
-        if (selectedOptionIndex == null) {
-            Toast.makeText(this, "Please select an answer", Toast.LENGTH_SHORT).show()
-            return
+        val selectedAnswer = when (selectedId) {
+            R.id.optionA -> "A"
+            R.id.optionB -> "B"
+            R.id.optionC -> "C"
+            R.id.optionD -> "D"
+            else -> ""
         }
 
-        if (currentOptions.isNotEmpty() && currentOptions[selectedOptionIndex!!] == correctAnswerText) {
+        if (selectedAnswer == questions[currentIndex].correctAnswer) {
             score++
         }
 
-        currentQuestionIndex++
-        if (currentQuestionIndex < activeQuestions.size) {
-            loadQuestion()
-        } else {
-            finishQuiz()
-        }
+        countDownTimer?.cancel()
+
+        currentIndex++
+        loadQuestion()
     }
 
-    private fun finishQuiz() {
-        countDownTimer?.cancel()
+    private fun showResult() {
+
+        // 💾 SAVE SCORE
+        val sharedPref = getSharedPreferences("QuizApp", MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putInt("last_score", score)
+        editor.apply()
+
+        // 🚀 OPEN RESULT SCREEN
         val intent = Intent(this, ResultActivity::class.java)
-        intent.putExtra("FINAL_SCORE", score)
-        intent.putExtra("TOTAL_QUESTIONS", activeQuestions.size)
-        val sName = this.intent.getStringExtra("SUBJECT_NAME") ?: "General"
-        intent.putExtra("SUBJECT_NAME", sName)
+        intent.putExtra("score", score)
+        intent.putExtra("total", questions.size)
         startActivity(intent)
+
         finish()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        countDownTimer?.cancel()
-    }
-
-    private fun decodeHtml(text: String): String {
-        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY).toString()
-        } else {
-            @Suppress("DEPRECATION")
-            Html.fromHtml(text).toString()
-        }
     }
 }

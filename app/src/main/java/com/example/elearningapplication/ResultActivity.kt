@@ -4,15 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import java.util.*
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 
 class ResultActivity : AppCompatActivity() {
 
@@ -20,28 +18,30 @@ class ResultActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
 
-        // 1. Get the data passed from QuizActivity
-        val score = intent.getIntExtra("FINAL_SCORE", 0)
-        val totalQuestions = intent.getIntExtra("TOTAL_QUESTIONS", 10)
+        // ✅ FIXED KEYS (VERY IMPORTANT)
+        val score = intent.getIntExtra("score", 0)
+        val totalQuestions = intent.getIntExtra("total", 10)
         val subject = intent.getStringExtra("SUBJECT_NAME") ?: "General"
 
+        // ✅ SAVE HISTORY (LOCAL)
         val sharedPref = getSharedPreferences("quiz_history", MODE_PRIVATE)
         val editor = sharedPref.edit()
 
         val oldData = sharedPref.getString("history", "") ?: ""
-
-        val date = SimpleDateFormat("dd/MM/yyyy HH:mm").format(Date())
+        val date = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date())
 
         val newEntry = "📘 $subject: $score/$totalQuestions\n🕒 $date\n\n"
 
         editor.putString("history", oldData + newEntry)
         editor.apply()
 
-        // 2. Calculations
+        // ✅ CALCULATIONS
         val incorrect = totalQuestions - score
-        val percentage = ((score.toFloat() / totalQuestions.toFloat()) * 100).toInt()
+        val percentage = if (totalQuestions > 0)
+            ((score.toFloat() / totalQuestions.toFloat()) * 100).toInt()
+        else 0
 
-        // 3. UI Elements
+        // ✅ UI ELEMENTS
         val circularProgress = findViewById<CircularProgressIndicator>(R.id.circularProgress)
         val tvPercentage = findViewById<TextView>(R.id.tvPercentage)
         val tvCorrect = findViewById<TextView>(R.id.tvCorrect)
@@ -51,13 +51,12 @@ class ResultActivity : AppCompatActivity() {
         val btnRetake = findViewById<MaterialButton>(R.id.btnRetake)
         val btnBackHome = findViewById<MaterialButton>(R.id.btnBackHome)
 
-        // 4. Update Main Stats
+        // ✅ UPDATE UI
         circularProgress.setProgressCompat(percentage, true)
         tvPercentage.text = "$percentage%"
         tvCorrect.text = score.toString()
         tvIncorrect.text = incorrect.toString()
 
-        // --- THE HUMAN & CATCHY FEEDBACK LOGIC ---
         tvFeedbackHeadline.text = when {
             percentage <= 25 -> "Take a break, grab a chai, and try again. ☕"
             percentage <= 50 -> "Keep it up! You're getting the hang of it. ✨"
@@ -65,10 +64,10 @@ class ResultActivity : AppCompatActivity() {
             else -> "Absolute Legend! You've totally nailed this quiz. 👑"
         }
 
-        // 5. Save to Firestore
+        // ✅ SAVE TO FIRESTORE
         saveResultToFirestore(score, totalQuestions, subject)
 
-        // 6. Navigation
+        // ✅ BUTTONS
         btnRetake.setOnClickListener {
             val intent = Intent(this, QuizSetupActivity::class.java)
             intent.putExtra("SUBJECT_NAME", subject)
@@ -90,22 +89,32 @@ class ResultActivity : AppCompatActivity() {
         val user = auth.currentUser
 
         if (user != null) {
+            val percentage = if (total > 0)
+                (score.toFloat() / total.toFloat()) * 100
+            else 0f
+
             val resultData = hashMapOf(
                 "studentName" to (user.displayName ?: "Anonymous"),
                 "studentEmail" to user.email,
                 "score" to score,
                 "totalQuestions" to total,
-                "percentage" to ((score.toFloat() / total.toFloat()) * 100),
+                "percentage" to percentage,
                 "subject" to subject,
                 "timestamp" to com.google.firebase.Timestamp(Date()),
-                "feedbackGiven" to getFeedbackString(((score.toFloat() / total.toFloat()) * 100).toInt())
+                "feedbackGiven" to getFeedbackString(percentage.toInt())
             )
 
-            db.collection("quiz_results").add(resultData)
+            db.collection("quiz_results")
+                .add(resultData)
+                .addOnSuccessListener {
+                    Log.d("FIRESTORE", "Result saved successfully")
+                }
+                .addOnFailureListener {
+                    Log.e("FIRESTORE", "Error saving result", it)
+                }
         }
     }
 
-    // Helper function so the same feedback text is saved to Firestore for the teacher to see
     private fun getFeedbackString(pct: Int): String {
         return when {
             pct <= 25 -> "Needs improvement - Suggested a break."

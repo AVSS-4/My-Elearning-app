@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSurface">
 
+    <!-- SCROLL CONTENT -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="20dp">
 
             <!-- HEADER -->
             <LinearLayout
@@ -24,11 +25,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="32dp">
+                android:layout_marginBottom="24dp">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:src="@android:drawable/ic_menu_agenda"
                     app:tint="?attr/colorPrimary" />
 
@@ -40,11 +41,11 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="?attr/colorPrimary"
-                    android:layout_marginStart="8dp"/>
+                    android:layout_marginStart="10dp"/>
 
                 <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
                     android:src="@android:drawable/ic_menu_myplaces"
                     app:tint="?attr/colorOutline" />
             </LinearLayout>
@@ -53,29 +54,32 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="WELCOME BACK, ARCHITECT"
-                android:textSize="14sp"
+                android:text="WELCOME BACK"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="?attr/colorOutline"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="4dp"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="What shall we build today?"
-                android:textSize="36sp"
+                android:textSize="26sp"
                 android:textStyle="bold"
                 android:textColor="?attr/colorOnSurface"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="20dp"/>
 
             <!-- SEARCH -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/searchBarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:boxBackgroundColor="?attr/colorSurfaceVariant"
-                app:boxStrokeColor="?attr/colorPrimary"
+                android:layout_marginBottom="20dp"
+                app:boxBackgroundMode="filled"
+                app:boxCornerRadiusTopStart="18dp"
+                app:boxCornerRadiusTopEnd="18dp"
+                app:boxCornerRadiusBottomStart="18dp"
+                app:boxCornerRadiusBottomEnd="18dp"
                 app:endIconMode="custom"
                 app:endIconDrawable="@android:drawable/ic_menu_search">
 
@@ -83,64 +87,88 @@
                     android:id="@+id/etSearch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Search subjects..."/>
+                    android:hint="Search subjects (math, science...)"
+                    android:padding="14dp"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- ✅ UPLOAD BUTTON -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnUpload"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Upload Questions File"
-                android:layout_marginBottom="12dp"
-                android:textColor="?attr/colorOnPrimary"
-                app:backgroundTint="?attr/colorPrimary"/>
-
-            <!-- ✅ FILE CONTENT DISPLAY -->
-            <TextView
-                android:id="@+id/tvFileContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="File content will appear here"
-                android:textSize="16sp"
-                android:padding="12dp"
-                android:background="?attr/colorSurfaceVariant"
-                android:layout_marginBottom="16dp"/>
-
-            <!-- COMPUTER SCIENCE -->
+            <!-- PRIMARY ACTION CARD -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardComputerScience"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="12dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorOutline">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="24dp">
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Upload Custom Questions"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="6dp"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Use your own question files"
+                        android:textSize="14sp"
+                        android:textColor="?attr/colorOutline"
+                        android:layout_marginBottom="12dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnUpload"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:text="Upload File"
+                        app:cornerRadius="14dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- COMPUTER SCIENCE CARD -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardComputerScience"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Computer Science"
-                        android:textSize="24sp"
-                        android:textStyle="bold"/>
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="6dp"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Test your coding knowledge"
+                        android:textSize="14sp"
+                        android:textColor="?attr/colorOutline"
+                        android:layout_marginBottom="12dp"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnCSQuiz"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Start Quiz"/>
-
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnNavProfile"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Go to Profile"
-                        android:layout_marginTop="16dp"/>
+                        android:text="Start Quiz"
+                        app:cornerRadius="12dp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -148,34 +176,52 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnHistory"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:text="View Quiz History"
+                android:layout_marginTop="8dp"
+                app:cornerRadius="14dp"/>
+
+            <!-- FILE CONTENT -->
+            <TextView
+                android:id="@+id/tvFileContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="File content preview"
+                android:textSize="13sp"
+                android:padding="12dp"
+                android:background="?attr/colorSurfaceVariant"
                 android:layout_marginTop="16dp"
-                android:textColor="?attr/colorOnPrimary"
-                app:backgroundTint="?attr/colorPrimary"/>
+                android:visibility="gone"/>
 
         </LinearLayout>
     </ScrollView>
 
-    <!-- BOTTOM NAV -->
+    <!-- PREMIUM BOTTOM NAV -->
     <LinearLayout
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:background="?attr/colorSurfaceVariant"
+        android:elevation="12dp">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnHome"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="HOME"/>
+            android:text="Home"
+            app:cornerRadius="16dp"/>
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnProfileBottom"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="PROFILE"/>
+            android:text="Profile"
+            app:cornerRadius="16dp"/>
     </LinearLayout>
 
 </RelativeLayout>

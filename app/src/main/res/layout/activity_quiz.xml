@@ -1,252 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/surface">
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:layout_alignParentTop="true"
-        android:max="100"
-        android:progress="0"
-        android:progressTint="@color/primary"
-        android:backgroundTint="@color/surface_container_high"
-        android:elevation="10dp"/>
-
-    <ProgressBar
-        android:id="@+id/progressBarLoading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        android:elevation="15dp"/>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/progressBar"
-        android:layout_above="@id/bottomActionArea"
-        android:paddingTop="80dp"
-        android:paddingHorizontal="24dp"
-        android:clipToPadding="false">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="CURRENT ASSESSMENT"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                android:textColor="@color/tertiary"
-                android:layout_marginBottom="4dp"/>
-
-            <TextView
-                android:id="@+id/tvQuestionTracker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Question 1 of 5"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:textColor="@color/on_surface"
-                android:layout_marginBottom="24dp"/>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/surface_container_lowest"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp"
-                app:strokeColor="@color/outline_variant"
-                app:strokeWidth="1dp"
-                android:layout_marginBottom="32dp">
-
-                <TextView
-                    android:id="@+id/tvQuestionText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Loading Question..."
-                    android:textSize="18sp"
-                    android:textColor="@color/on_surface"
-                    android:lineSpacingExtra="6dp"
-                    android:padding="24dp"/>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnOption0"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="64dp"
-                android:text="Option A"
-                android:textColor="@color/outline"
-                android:textAlignment="viewStart"
-                app:backgroundTint="@color/surface_container_low"
-                app:cornerRadius="8dp"
-                android:layout_marginBottom="12dp"
-                android:padding="16dp"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnOption1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="64dp"
-                android:text="Option B"
-                android:textColor="@color/outline"
-                android:textAlignment="viewStart"
-                app:backgroundTint="@color/surface_container_low"
-                app:cornerRadius="8dp"
-                android:layout_marginBottom="12dp"
-                android:padding="16dp"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnOption2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="64dp"
-                android:text="Option C"
-                android:textColor="@color/outline"
-                android:textAlignment="viewStart"
-                app:backgroundTint="@color/surface_container_low"
-                app:cornerRadius="8dp"
-                android:layout_marginBottom="12dp"
-                android:padding="16dp"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnOption3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="64dp"
-                android:text="Option D"
-                android:textColor="@color/outline"
-                android:textAlignment="viewStart"
-                app:backgroundTint="@color/surface_container_low"
-                app:cornerRadius="8dp"
-                android:layout_marginBottom="12dp"
-                android:padding="16dp"/>
-
-        </LinearLayout>
-    </ScrollView>
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/bottomActionArea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:background="@color/surface_container_lowest"
-        android:elevation="16dp">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnReport"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Report"
-            android:textColor="@color/outline"
-            app:icon="@android:drawable/ic_menu_info_details"
-            app:iconTint="@color/outline"/>
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnNext"
-            android:layout_width="wrap_content"
-            android:layout_height="56dp"
-            android:text="Next Question"
-            android:textStyle="bold"
-            android:textColor="?attr/colorOnPrimary"
-            app:iconTint="?attr/colorOnPrimary"
-            app:cornerRadius="8dp"
-            app:backgroundTint="?attr/colorPrimary"
-            app:icon="@android:drawable/ic_media_next"
-            app:iconGravity="end"/>
-    </LinearLayout>
-
-    <!-- Header Area MOVED TO BOTTOM of XML so it is drawn on top of the ScrollView -->
-    <RelativeLayout
-        android:id="@+id/topHeader"
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:layout_below="@id/progressBar"
-        android:background="@color/surface_container_lowest"
-        android:elevation="8dp"
-        android:paddingHorizontal="16dp">
-
-        <ImageView
-            android:id="@+id/ivLogo"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_centerVertical="true"
-            android:src="@android:drawable/ic_menu_agenda"
-            app:tint="@color/primary" />
-
+        <!-- ⏱ Timer -->
         <TextView
+            android:id="@+id/tvTimer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/ivLogo"
-            android:layout_marginStart="8dp"
-            android:text="Academic Architect"
-            android:textSize="16sp"
+            android:text="Time: 60"
+            android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/primary" />
+            android:layout_gravity="end"
+            android:paddingBottom="10dp" />
 
-        <ImageButton
-            android:id="@+id/btnClose"
-            android:layout_width="60dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="0.5dp"
-            android:padding="5dp"
-            android:layout_alignParentEnd="true"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            app:tint="@color/on_surface_variant"
-            android:clickable="true"
-            android:scaleType="fitCenter"
-            android:focusable="true"
-            android:layout_height="50dp"
-            android:elevation="10dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Close Quiz" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <!-- ❓ Question -->
+        <TextView
+            android:id="@+id/tvQuestion"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@id/btnClose"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="8dp"
-            android:background="@color/surface_container_low"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp">
+            android:text="Question will appear here"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingBottom="20dp" />
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@android:drawable/ic_menu_recent_history"
-                app:tint="@color/primary" />
+        <!-- 🔘 Options -->
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/tvTimer"
-                android:layout_width="wrap_content"
+            <RadioButton
+                android:id="@+id/optionA"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="45:00"
-                android:textColor="@color/primary"
-                android:textStyle="bold" />
-        </LinearLayout>
-    </RelativeLayout>
+                android:text="Option A"
+                android:padding="8dp" />
 
-</RelativeLayout>
+            <RadioButton
+                android:id="@+id/optionB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Option B"
+                android:padding="8dp" />
+
+            <RadioButton
+                android:id="@+id/optionC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Option C"
+                android:padding="8dp" />
+
+            <RadioButton
+                android:id="@+id/optionD"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Option D"
+                android:padding="8dp" />
+
+        </RadioGroup>
+
+        <!-- ▶️ Next Button -->
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Next"
+            android:layout_marginTop="20dp" />
+
+    </LinearLayout>
+</ScrollView>

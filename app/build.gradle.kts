@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.elearningapplication"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -47,6 +47,8 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.firebase.crashlytics)
     implementation("com.google.android.material:material:1.9.0")
+    implementation("org.apache.poi:poi:5.2.3")
+    implementation("org.apache.poi:poi-ooxml:5.2.3")
     
     // Retrofit
     implementation(libs.retrofit)
